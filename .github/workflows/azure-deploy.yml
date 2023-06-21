@@ -46,3 +46,9 @@ jobs:
         uses: blablacar/action-download-last-artifact@v0.1.0
         with:
           name: .net-app
+
+      - name: Print workspace directory
+        run: |
+            echo "Workspace directory: ${{ github.workspace }}"
+            echo "Contents of workspace:"
+            ls -a ${{ github.workspace }}/
