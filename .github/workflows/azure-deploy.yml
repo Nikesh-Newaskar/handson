@@ -43,6 +43,6 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: blablacar/action-download-last-artifact@v0.1.0
         with:
           name: .net-app
