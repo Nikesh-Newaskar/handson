@@ -15,25 +15,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+    - name: Az CLI login
+      uses: azure/login@v1
       with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-      working-directory: web-app
-    - name: Build
-      run: dotnet build web-app --no-restore
-    - name: Test
-      run: dotnet test web-app --no-build --verbosity normal
-      
-    - name: dotnet publish
-      run: dotnet publish web-app -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v3
+    - name: Azure CLI script
+      uses: azure/CLI@v1
       with:
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
+        azcliversion: 2.30.0
+        inlineScript: |
+          az artifacts universal download --organization "https://dev.azure.com/WKTAAE/" \
+            --project "0e3ee8e7-f0a6-4b01-875c-494de9d2f74a" \
+            --scope project \
+            --feed "WKTAAE-Build-Artifacts" \
+            --name "wktaae-workspaceselector" \
+            --version "5.6.0" \
+            --path .
 
